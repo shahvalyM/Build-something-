@@ -5,3 +5,4 @@ __pycache__/
 .idea/
 venv/
 *.sqlite3
+docker-compose.override.yml
