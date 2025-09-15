@@ -32,6 +32,15 @@ services:
     networks:
       - todo-net
 
+  checker:
+    build: ./checker
+    environment:
+      - DATABASE_URL=postgresql://postgres:example@db:5432/tododb
+    ports:
+      - "8001:8000"
+    networks:
+      - todo-net
+
 volumes:
   pgdata:
 
