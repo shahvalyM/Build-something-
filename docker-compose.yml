@@ -40,6 +40,16 @@ services:
       - "8001:8000"
     networks:
       - todo-net
+      
+  advisor:
+    build: ./advisor
+    environment:
+      - CHECKER_URL=http://checker:8000/check
+    ports:
+      - "8002:8000"
+    networks:
+      - todo-net
+
 
 volumes:
   pgdata:

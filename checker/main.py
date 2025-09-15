@@ -1,4 +1,4 @@
-# checker/main.py
+# checker/main.py (exempel med CORS)
 from fastapi import FastAPI, HTTPException, Depends
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
@@ -7,10 +7,25 @@ import hashlib
 from database import SessionLocal, engine, Base
 import models
 
-# Ensure models are created (safe-guard; uses engine)
+# Create DB tables if missing
 Base.metadata.create_all(bind=engine)
 
+from fastapi.middleware.cors import CORSMiddleware
+
 app = FastAPI(title="Checker (DB backed)")
+
+# Konfigurera vilken origin som får anropa API:t
+origins = [
+    "http://localhost:8080"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=False,
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization"],
+)
 
 class CheckRequest(BaseModel):
     password: str
