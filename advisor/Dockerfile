@@ -1,3 +1,5 @@
+# Builds the Password Advisor service (FastAPI) that evaluates password strength
+# and combines local checks with breach data from the Checker service.
 FROM python:3.11-slim
 WORKDIR /app
 COPY requirements.txt .

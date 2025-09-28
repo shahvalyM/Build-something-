@@ -1,0 +1,28 @@
+# ~/password-advisor-k8s/ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: password-advisor-ingress # Uppdaterat namn
+  namespace: password-advisor # Uppdaterad namespace
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "8m"
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      # /evaluate anropas av frontend, ska gå till advisor-tjänsten
+      - path: /evaluate
+        pathType: Prefix
+        backend:
+          service:
+            name: advisor # Bytt från 'api' till 'advisor'
+            port:
+              number: 8000
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: frontend # Rätt backend för frontend
+            port:
+              number: 8080

@@ -1,0 +1,24 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: load-hashes
+  namespace: password-advisor
+spec:
+  backoffLimit: 6
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: load-hashes
+        image: shah10d/checker:v2.4 
+        imagePullPolicy: IfNotPresent
+        env:
+          - name: POSTGRES_HOST
+            value: "postgres"
+          - name: POSTGRES_PORT
+            value: "5432"
+        envFrom:
+          - secretRef:
+              name: pg-secret
+        # Kör direkt skriptet som finns i bilden
+        command: ["python", "/app/load_to_db.py"]

@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: advisor
+  namespace: password-advisor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: advisor
+  template:
+    metadata:
+      labels:
+        app: advisor
+    spec:
+      containers:
+      - name: advisor
+        image: shah10d/advisor:v2.3 
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8000
+        env:
+        - name: CHECKER_URL
+          value: "http://checker:8000/check"
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 3
+          periodSeconds: 5

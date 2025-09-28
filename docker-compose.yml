@@ -40,7 +40,7 @@ services:
       - "8001:8000"
     networks:
       - todo-net
-      
+
   advisor:
     build: ./advisor
     environment:

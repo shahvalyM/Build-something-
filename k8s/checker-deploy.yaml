@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: checker
+  namespace: password-advisor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: checker
+  template:
+    metadata:
+      labels:
+        app: checker
+    spec:
+      containers:
+      - name: checker
+        image: shah10d/checker:v2.4 
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8000
+        env:
+          - name: POSTGRES_HOST
+            value: "postgres"
+        envFrom:
+          - secretRef:
+              name: pg-secret
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 3
+          periodSeconds: 5

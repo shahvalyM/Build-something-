@@ -7,3 +7,4 @@ venv/
 *.sqlite3
 docker-compose.override.yml
 checker/raw_common_passwords.txt
+secret-postgres.yaml

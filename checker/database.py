@@ -1,4 +1,6 @@
-# checker/database.py (ersätt med detta)
+# Handles PostgreSQL connection setup and database readiness waiting logic.
+# Uses environment variables for credentials with sensible defaults for Kubernetes.
+
 import os
 import time
 from sqlalchemy import create_engine, text
@@ -10,7 +12,7 @@ def build_database_url():
     port = os.getenv("DB_PORT", os.getenv("DATABASE_PORT", "5432"))
     user = os.getenv("POSTGRES_USER", os.getenv("DB_USER", "postgres"))
     password = os.getenv("POSTGRES_PASSWORD", os.getenv("DB_PASSWORD", "example"))
-    dbname = os.getenv("POSTGRES_DB", os.getenv("DB_NAME", "tododb"))
+    dbname = os.getenv("POSTGRES_DB", os.getenv("DB_NAME", "passworddb"))
     return f"postgresql://{user}:{password}@{host}:{port}/{dbname}"
 
 DATABASE_URL = os.getenv("DATABASE_URL", build_database_url())
@@ -20,6 +22,7 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
 def wait_for_db(max_retries=20, delay=3):
+    """Waits for PostgreSQL to be ready before proceeding."""
     retries = 0
     while True:
         try:
@@ -32,7 +35,7 @@ def wait_for_db(max_retries=20, delay=3):
             if retries > max_retries:
                 print(f"[wait_for_db] Giving up after {retries} retries: {e}")
                 raise
-            print(f"[wait_for_db] Database not ready, retry {retries}/{max_retries} — waiting {delay}s... ({e})")
+            print(f"[wait_for_db] Database not ready, retry {retries}/{max_retries} — waiting {delay}s...")
             time.sleep(delay)
 
 def init_db():

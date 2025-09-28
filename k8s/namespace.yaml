@@ -1,0 +1,5 @@
+# en separat  container i k8s for allt som tillhör projectet
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: password-advisor

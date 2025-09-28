@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Password Checker & Advisor — Detailed</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial; padding: 20px; max-width: 820px; margin: auto; }
+    h1 { margin-bottom: 4px; }
+    .row { display:flex; gap:12px; align-items:center; }
+    input[type="password"]{ padding:10px; flex:1; font-size:1rem; }
+    button { padding:10px 14px; font-size:1rem; }
+    .panel { margin-top:16px; padding:12px; border-radius:8px; border:1px solid #ddd; background:#fff; }
+    .status { font-weight:700; padding:8px 10px; border-radius:6px; display:inline-block; color:#fff; }
+    .green { background:#2e7d32; } .yellow { background:#f9a825; } .red { background:#c62828; }
+    .meta { color:#555; font-size:0.95rem; margin-top:6px; }
+    ul.checks { list-style: none; padding-left: 0; display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:6px; }
+    li.ok { color: #0b6d2f; } li.bad { color:#8a1f1f; }
+    ul.recs { margin-top:8px; padding-left:18px; }
+    .small { font-size:0.9rem; color:#444; }
+  </style>
+</head>
+<body>
+  <h1>Password Checker & Advisor</h1>
+  <p class="meta">Checks if your password appears in our local breach database and provides actionable improvement suggestions.</p>
+
+  <div class="row">
+    <input id="pwd" type="password" placeholder="Enter password here (not for production!)" autocomplete="off" />
+    <button id="btn">Check</button>
+  </div>
+
+  <div id="result" class="panel" style="display:none;">
+    <div id="topline" style="display:flex; justify-content:space-between; align-items:center;">
+      <div>
+        <span id="statusBadge" class="status">—</span>
+        <span id="scoreText" class="small" style="margin-left:8px;"></span>
+      </div>
+      <div id="leakInfo" class="small"></div>
+    </div>
+
+    <div id="message" style="margin-top:12px; font-weight:600;"></div>
+
+    <div style="margin-top:12px;">
+      <div class="small">Checks (quick overview):</div>
+      <ul id="checks" class="checks"></ul>
+    </div>
+
+    <div style="margin-top:10px;">
+      <div class="small">Recommendations:</div>
+      <ul id="recs" class="recs"></ul>
+    </div>
+
+    <div style="margin-top:10px;">
+      <div class="small">Privacy note: We do not log your password.</div>
+    </div>
+  </div>
+  // Main frontend logic: collects password, sends to /evaluate, and renders results.
+  <script>
+    const btn = document.getElementById('btn');
+    const pwd = document.getElementById('pwd');
+    const result = document.getElementById('result');
+    const statusBadge = document.getElementById('statusBadge');
+    const scoreText = document.getElementById('scoreText');
+    const leakInfo = document.getElementById('leakInfo');
+    const message = document.getElementById('message');
+    const checksEl = document.getElementById('checks');
+    const recsEl = document.getElementById('recs');
+
+    function clearUI() {
+      result.style.display = 'none';
+      statusBadge.className = 'status';
+      statusBadge.textContent = '—';
+      scoreText.textContent = '';
+      leakInfo.textContent = '';
+      message.textContent = '';
+      checksEl.innerHTML = '';
+      recsEl.innerHTML = '';
+    }
+
+    function renderChecks(checks) {
+      checksEl.innerHTML = '';
+      for (const k of Object.keys(checks)) {
+        const li = document.createElement('li');
+        li.className = checks[k] ? 'ok' : 'bad';
+        const label = k.replace(/_/g,' ').replace(/\b\w/g, c => c.toUpperCase());
+        li.innerHTML = `${checks[k] ? '✔' : '✖'} ${label}`;
+        checksEl.appendChild(li);
+      }
+    }
+
+    function renderRecs(recs) {
+      recsEl.innerHTML = '';
+      for (const r of recs || []) {
+        const li = document.createElement('li');
+        li.innerHTML = r;
+        recsEl.appendChild(li);
+      }
+    }
+
+    async function evaluate(pw) {
+      clearUI();
+      btn.disabled = true;
+      btn.textContent = 'Checking…';
+
+      try {
+          const resp = await fetch('/evaluate', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({password: pw})
+          });
+
+        if (!resp.ok) {
+          const t = await resp.text();
+          alert('Server error: ' + resp.status + ' — ' + t);
+          return;
+        }
+
+        const data = await resp.json();
+        result.style.display = 'block';
+
+        const leaked = !!data.leaked;
+        const score = typeof data.score === 'number' ? data.score : 0;
+
+        if (leaked) {
+          statusBadge.classList.add('red');
+          statusBadge.textContent = 'LEAKED';
+        } else if (score >= 80) {
+          statusBadge.classList.add('green');
+          statusBadge.textContent = 'STRONG';
+        } else if (score >= 50) {
+          statusBadge.classList.add('yellow');
+          statusBadge.textContent = 'MEDIUM';
+        } else {
+          statusBadge.classList.add('red');
+          statusBadge.textContent = 'WEAK';
+        }
+
+        scoreText.textContent = `Score: ${score}/100`;
+
+        if (leaked) {
+          const count = data.leaked_count ? ` (${data.leaked_count} hits)` : '';
+          leakInfo.textContent = 'Password found in breach database' + count;
+        } else {
+          leakInfo.textContent = 'No matches in our local database';
+        }
+
+        message.textContent = data.message || '';
+
+        renderChecks(data.checks || {});
+        renderRecs(data.recommendations || []);
+
+      } catch (err) {
+        alert('Network error: ' + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Check';
+      }
+    }
+
+    btn.addEventListener('click', () => {
+      const v = pwd.value || '';
+      if (!v) { alert('Please enter a password first'); return; }
+      evaluate(v);
+    });
+
+    pwd.addEventListener('keypress', (e) => { if (e.key === 'Enter') btn.click(); });
+  </script>
+</body>
+</html>

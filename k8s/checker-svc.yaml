@@ -1,0 +1,14 @@
+# checker-svc.yaml
+# Varför: internt service så andra pods når checker via DNS 'checker'
+apiVersion: v1
+kind: Service
+metadata:
+  name: checker
+  namespace: password-advisor
+spec:
+  selector:
+    app: checker
+  ports:
+  - port: 8000
+    targetPort: 8000
+  type: ClusterIP

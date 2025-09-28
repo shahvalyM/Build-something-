@@ -1,3 +1,5 @@
+# Runs the Checker microservice (FastAPI) that checks if a password hash
+# exists in the breached passwords database (PostgreSQL).
 FROM python:3.11-slim
 WORKDIR /app
 COPY requirements.txt .

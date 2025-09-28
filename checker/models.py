@@ -1,4 +1,4 @@
-# checker/models.py
+# SQLAlchemy model for the leaked_passwords table in PostgreSQL.
 from sqlalchemy import Column, Text, Integer
 from database import Base
 
