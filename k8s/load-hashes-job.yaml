@@ -1,3 +1,6 @@
+# Runs a one-time Kubernetes Job to load breached password hashes into PostgreSQL.
+# Uses the same Checker image to execute 'load_to_db.py', ensuring consistency
+# with the database schema and connection logic.
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -20,5 +23,4 @@ spec:
         envFrom:
           - secretRef:
               name: pg-secret
-        # Kör direkt skriptet som finns i bilden
         command: ["python", "/app/load_to_db.py"]

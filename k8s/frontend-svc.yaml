@@ -1,3 +1,6 @@
+# Exposes the Frontend static web server internally via a ClusterIP Service.
+# Allows the Ingress controller to route external HTTP traffic to the frontend pod
+# using the DNS name 'frontend' within the 'password-advisor' namespace.
 apiVersion: v1
 kind: Service
 metadata:

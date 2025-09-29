@@ -104,8 +104,8 @@ test-db:
 test-ingress:
 	@echo "Checking if ingress-nginx controller is installed..."
 	@if ! kubectl get svc ingress-nginx-controller -n ingress-nginx >/dev/null 2>&1; then \
-		echo "❌ Error: ingress-nginx-controller service not found."; \
-		echo "👉 Run: minikube addons enable ingress"; \
+		echo " Error: ingress-nginx-controller service not found."; \
+		echo " Run: minikube addons enable ingress"; \
 		echo "   Then wait ~30 seconds for it to start."; \
 		exit 1; \
 	fi

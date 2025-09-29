@@ -1,5 +1,6 @@
-# checker-svc.yaml
-# Varför: internt service så andra pods når checker via DNS 'checker'
+# Exposes the Checker microservice internally via a ClusterIP Service.
+# Enables other pods (e.g., Advisor) to reach Checker using the DNS name 'checker'
+# within the 'password-advisor' namespace on port 8000.
 apiVersion: v1
 kind: Service
 metadata:

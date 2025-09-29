@@ -1,3 +1,6 @@
+# Requests 2Gi of persistent storage for PostgreSQL data.
+# Ensures database contents survive pod restarts or rescheduling,
+# providing durability for the breach hash dataset.
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:

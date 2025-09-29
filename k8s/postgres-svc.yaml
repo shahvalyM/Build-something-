@@ -1,3 +1,6 @@
+# Exposes the PostgreSQL pod internally via a ClusterIP Service.
+# Allows other services (Checker, load-hashes Job) to connect to the database
+# using the DNS name 'postgres' within the 'password-advisor' namespace.
 apiVersion: v1
 kind: Service
 metadata:

@@ -1,3 +1,6 @@
+# Deploys the Checker microservice as a Kubernetes Deployment.
+# Runs a single replica that checks if password hashes exist in the PostgreSQL breach database.
+# Uses secrets for credentials and connects to the 'postgres' service via internal DNS.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -21,10 +24,10 @@ spec:
         - containerPort: 8000
         env:
           - name: POSTGRES_HOST
-            value: "postgres"
+            value: "postgres"    # Internal Kubernetes DNS name of the PostgreSQL service
         envFrom:
           - secretRef:
-              name: pg-secret
+              name: pg-secret   # Injects POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB from Kubernetes Secret
         readinessProbe:
           httpGet:
             path: /health

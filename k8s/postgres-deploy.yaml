@@ -1,3 +1,6 @@
+# Deploys PostgreSQL 15 as a stateful database for storing breached password hashes.
+# Uses a PersistentVolumeClaim for durable storage and injects credentials securely
+# from the 'pg-secret' Kubernetes Secret.
 apiVersion: apps/v1
 kind: Deployment
 metadata:

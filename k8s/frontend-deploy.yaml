@@ -1,3 +1,6 @@
+# Deploys the Frontend as a Kubernetes Deployment serving static HTML/JS files.
+# Runs a single replica of a lightweight HTTP server (Python) that hosts index.html
+# and checker.html, with auto-redirect from / to /checker.html.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -21,7 +24,7 @@ spec:
         - containerPort: 8080
         readinessProbe:
           httpGet:
-            path: /checker.html
+            path: /checker.html  #  Ensures the main UI page is served before marking pod ready
             port: 8080
           initialDelaySeconds: 3
           periodSeconds: 5

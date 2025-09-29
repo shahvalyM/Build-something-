@@ -1,3 +1,6 @@
+# Deploys the Advisor microservice as a Kubernetes Deployment.
+# Runs a single replica of the FastAPI container that evaluates password strength
+# and integrates results from the Checker service via internal cluster networking.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
