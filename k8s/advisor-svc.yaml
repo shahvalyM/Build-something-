@@ -1,6 +1,7 @@
 # Exposes the Advisor pod internally via a ClusterIP Service.
 # Allows other services in the cluster (e.g., frontend) to reach Advisor
 # using the DNS name 'advisor.password-advisor.svc.cluster.local' on port 8000.
+apiVersion: v1
 kind: Service
 metadata:
   name: advisor

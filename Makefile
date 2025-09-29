@@ -6,9 +6,9 @@ NAMESPACE ?= password-advisor
 K8S_DIR ?= k8s
 
 # Default Docker image tags (update if you build new versions)
-CHECKER_IMAGE ?= shah10d/checker:v2.4 
-ADVISOR_IMAGE ?=shah10d/advisor:v2.3 
-FRONTEND_IMAGE ?= shah10d/frontend:v2.2
+CHECKER_IMAGE ?= shah10d/checker:v.4 
+ADVISOR_IMAGE ?=shah10d/advisor:v.3 
+FRONTEND_IMAGE ?= shah10d/frontend:v.5 
 
 # ---------- PHONY targets ----------
 .PHONY: all clean namespace create-secret db wait-db job deploy-app ingress test test-db test-ingress build-images push-images logs reset-db

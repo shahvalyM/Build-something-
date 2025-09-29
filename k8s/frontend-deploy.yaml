@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: shah10d/frontend:v2.2
+        image: shah10d/frontend:v.5 
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080

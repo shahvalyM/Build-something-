@@ -18,6 +18,7 @@
     li.ok { color: #0b6d2f; } li.bad { color:#8a1f1f; }
     ul.recs { margin-top:8px; padding-left:18px; }
     .small { font-size:0.9rem; color:#444; }
+    .warning {background:#6d6969;color: rgb(250, 225, 4);}
   </style>
 </head>
 <body>
@@ -54,7 +55,7 @@
       <div class="small">Privacy note: We do not log your password.</div>
     </div>
   </div>
-  // Main frontend logic: collects password, sends to /evaluate, and renders results.
+  <!-- Main frontend logic: collects password, sends to /evaluate, and renders results. -->
   <script>
     const btn = document.getElementById('btn');
     const pwd = document.getElementById('pwd');
@@ -139,9 +140,11 @@
 
         if (leaked) {
           const count = data.leaked_count ? ` (${data.leaked_count} hits)` : '';
-          leakInfo.textContent = 'Password found in breach database' + count;
+          leakInfo.textContent = 'Password found in breach database!!!!' + count;
+          leakInfo.classList.add('warning');
         } else {
           leakInfo.textContent = 'No matches in our local database';
+          leakInfo.classList.remove('warning'); 
         }
 
         message.textContent = data.message || '';

@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: advisor
-        image: shah10d/advisor:v2.3 
+        image: shah10d/advisor:v.3  
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8000

@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: checker
-        image: shah10d/checker:v2.4 
+        image: shah10d/checker:v.4 
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8000

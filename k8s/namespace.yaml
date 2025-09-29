@@ -1,6 +1,7 @@
 # Creates an isolated Kubernetes namespace for the entire Password Advisor application.
 # Ensures all resources (pods, services, secrets) are grouped and managed together,
-# preventing naming conflicts with other projects in the same cluster.apiVersion: v1
+# preventing naming conflicts with other projects in the same cluster.
+apiVersion: v1
 kind: Namespace
 metadata:
   name: password-advisor

@@ -1,6 +1,7 @@
 # Configures the NGINX Ingress to route external HTTP traffic into the cluster.
 # Routes /evaluate to the Advisor service and all other paths (/) to the Frontend,
-# enabling a single entry point for the entire application.apiVersion: networking.k8s.io/v1
+# enabling a single entry point for the entire application.
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: password-advisor-ingress 

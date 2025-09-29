@@ -13,7 +13,7 @@ spec:
       restartPolicy: Never
       containers:
       - name: load-hashes
-        image: shah10d/checker:v2.4 
+        image: shah10d/checker:v.4 
         imagePullPolicy: IfNotPresent
         env:
           - name: POSTGRES_HOST
